@@ -1,16 +1,19 @@
 # Release workflow: build the action and update release tags for GitHub Marketplace.
-# When you publish (or edit) a release with a semantic tag (e.g. v1.0.0), this job:
-# 1. Builds the TypeScript action into dist/
-# 2. Force-pushes the tag to a commit containing action.yml + dist/index.js
-# 3. Updates major/minor tags (e.g. v1, v1.0) so users can pin to @v1 or @v1.0
-#
-# To publish to the Marketplace: create a release on GitHub, then check
-# "Publish this Action to the GitHub Marketplace" in the release form.
-# See RELEASE.md for step-by-step instructions.
+# Triggers:
+# - Manual: Actions → "Release to Marketplace" → Run workflow (choose a tag).
+# - On release: when you publish or edit a release with a semantic tag (e.g. v1.0.0).
+# The job builds the action, then force-pushes the tag with action.yml + dist/index.js.
+# See RELEASE.md for Marketplace publishing steps.
 
 name: Release to Marketplace
 
 on:
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Tag to build and update (e.g. v1.0.0). Required when run manually.'
+        required: true
+        default: 'v1.0.0'
   release:
     types: [published, edited]
 
@@ -24,7 +27,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.release.tag_name }}
+          ref: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.tag_name || github.event.release.tag_name }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -37,5 +40,7 @@ jobs:
 
       - name: Build and update release tags
         uses: JasonEtco/build-and-tag-action@v2
+        with:
+          tag_name: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.tag_name || github.event.release.tag_name }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
