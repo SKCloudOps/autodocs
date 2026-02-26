@@ -65,8 +65,8 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               tag_name: '${{ github.event.inputs.version }}',
-              name: '${{ github.event.inputs.version }} — Action Log Analyzer',
-              body: `## Action Log Analyzer ${{ github.event.inputs.version }}
+              name: '${{ github.event.inputs.version }} — AutoDocs',
+              body: `## AutoDocs ${{ github.event.inputs.version }}
 
             ${{ github.event.inputs.release_notes }}
 
@@ -75,13 +75,15 @@ jobs:
             - uses: ${{ github.repository }}@${{ github.event.inputs.version }}
               with:
                 github-token: \${{ secrets.GITHUB_TOKEN }}
+                ai-provider: github-models
             \`\`\`
 
             ### What It Does
-            - Useful for both successes and failures — runs on every workflow
-            - Failure: root cause analysis, suggested fixes, error context
-            - Success: job status, artifacts, coverage reports and links from logs
-            - Pattern-based error detection for Docker, Node.js, Kubernetes, and more`,
+            - AI that writes your documentation so your team does not have to
+            - Runs on every PR and push; detects changed files and generates docs
+            - Supports GitHub Models, OpenAI, and Anthropic
+            - Commits docs back to the branch or opens a separate PR
+            - Posts a summary comment on the PR`,
               draft: false,
               prerelease: false
             })
