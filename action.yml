@@ -1,0 +1,75 @@
+name: 'AutoDocs'
+description: 'AI that writes your documentation so your team does not have to. Automatically generates and commits docs when code changes.'
+author: 'SKCloudOps'
+
+branding:
+  icon: 'book-open'
+  color: 'green'
+
+inputs:
+  github-token:
+    description: 'GitHub token for reading code and committing docs'
+    required: true
+    default: ${{ github.token }}
+
+  ai-provider:
+    description: 'AI provider to use: github-models, openai, or anthropic'
+    required: false
+    default: 'github-models'
+
+  api-key:
+    description: 'API key for OpenAI or Anthropic. Not needed for github-models.'
+    required: false
+    default: ''
+
+  docs-path:
+    description: 'Directory to write generated documentation'
+    required: false
+    default: 'docs'
+
+  doc-style:
+    description: 'Documentation style: markdown, jsdoc, docstring, rst'
+    required: false
+    default: 'markdown'
+
+  languages:
+    description: 'Comma-separated list of file extensions to document. e.g. ts,py,go,java. Leave empty for all.'
+    required: false
+    default: ''
+
+  auto-commit:
+    description: 'Automatically commit generated docs back to the branch'
+    required: false
+    default: 'true'
+
+  create-pr:
+    description: 'Create a separate PR for generated docs instead of committing directly'
+    required: false
+    default: 'false'
+
+  min-lines:
+    description: 'Minimum lines of code in a file before generating docs for it'
+    required: false
+    default: '10'
+
+  exclude-paths:
+    description: 'Comma-separated glob patterns to exclude. e.g. test/**,dist/**,node_modules/**'
+    required: false
+    default: 'test/**,tests/**,dist/**,node_modules/**,*.test.*,*.spec.*'
+
+  post-comment:
+    description: 'Post a PR comment summarising what docs were generated'
+    required: false
+    default: 'true'
+
+outputs:
+  docs-generated:
+    description: 'Number of documentation files generated'
+  files-analysed:
+    description: 'Number of code files analysed'
+  docs-path:
+    description: 'Path where docs were written'
+
+runs:
+  using: 'node20'
+  main: 'dist/index.js'

@@ -1,0 +1,52 @@
+name: Auto-generate docs
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+  push:
+    branches: [main]
+
+jobs:
+  autodocs:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write       # commit docs back to branch
+      pull-requests: write  # post PR comment
+      models: read          # only needed for github-models provider
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: SKCloudOps/autodocs@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+          # AI provider — pick one:
+          # github-models (free, no extra key needed)
+          # openai        (requires OPENAI_API_KEY secret)
+          # anthropic     (requires ANTHROPIC_API_KEY secret)
+          ai-provider: github-models
+
+          # Only needed for openai or anthropic:
+          # api-key: ${{ secrets.OPENAI_API_KEY }}
+
+          # Where to write docs (default: docs/)
+          docs-path: docs
+
+          # Documentation style: markdown, jsdoc, docstring, rst
+          doc-style: markdown
+
+          # Only document these languages (leave empty for all):
+          # languages: ts,py,go,java
+
+          # Commit docs directly to branch (default: true)
+          auto-commit: true
+
+          # Or create a separate PR for docs (default: false)
+          # create-pr: true
+
+          # Skip files with fewer than N lines
+          min-lines: 10
+
+          # Paths to exclude
+          exclude-paths: test/**,tests/**,dist/**,node_modules/**,*.test.*,*.spec.*
