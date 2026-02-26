@@ -1,0 +1,24 @@
+{
+  "name": "autodocs",
+  "version": "1.0.0",
+  "description": "AI that writes your documentation so your team does not have to.",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "npx @vercel/ncc build index.ts -o dist --minify"
+  },
+  "keywords": [
+    "github-actions",
+    "documentation",
+    "ai"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@actions/core": "^1.10.1",
+    "@actions/exec": "^1.1.1",
+    "@actions/github": "^6.0.1"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "^0.38.1",
+    "typescript": "^5.3.3"
+  }
+}
