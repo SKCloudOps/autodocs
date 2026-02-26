@@ -1,5 +1,5 @@
 node_modules/
-dist/
+# dist/ — not ignored so release workflow can add built files to the tag
 *.log
 .env
 .DS_Store
